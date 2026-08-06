@@ -1,47 +1,79 @@
-# Exporting your Pandora Music Thumbs Up Collection
+# Pandora Thumbs Up Exporter (Markdown Edition)
 
-Pandora Music currently has no way to export your personal music preferences. There is an API, but it's currently not open to developers for use.
+This is a fork of [jeffsikes/pandora_export](https://github.com/jeffsikes/pandora_export), a browser console script that pulls your "Thumbed Up" songs off Pandora and saves them to a file on your computer, grouped by station.
 
-To get around these limitations, I created a website scraper to pull your liked (thumbed up) music into a JSON object that can be saved to you local filesystem.
+**What's different in this fork:** the original script saves your liked songs as a `.json` file. This version instead saves them as a `.md` (Markdown) file, formatted so you can drop it straight into an app like [Obsidian](https://obsidian.md) as a ready-to-read note — no conversion step needed.
 
-The results will be categorized by station name.
+Credit and thanks to the original author, [jeffsikes](https://github.com/jeffsikes), for figuring out how to scrape Pandora's page in the first place. This fork only changes the output format; the scrolling/collection logic is otherwise the same.
 
-## Working as of 10/22/2025
-If Pandora changes just the slightest thing about their HTML class structure, this script will break. There are other similar scripts around that no longer work because of similar HTML structure changes.
+## What you get
 
-## Step 1 - Open Pandora in a desktop web browser
-I used Firefox and it worked well. Here's the URL you're looking for (you must be logged into Pandora).
+A file named `pandora_thumbs_up_by_station.md` that looks like this:
 
-[https://www.pandora.com/profile/thumbs/{yourUsername}](https://www.pandora.com/profile/thumbs/{yourUsername})
+```md
+# Pandora Thumbs Up — By Station
 
-You can also find this by clicking your profile icon in the upper right of your screen, then choose "My Profile", then "Thumbs Up" from the left hand menu navigation.
+## Stick Figure Radio
+- The Movement - Through The Heart
+- Stylie - Just Chillin'
 
-Your screen should look similar to this:
+## Dead Man's Party Radio
+- The Fixx - Red Skies (Re-recorded / Remastered)
+- Oingo Boingo - Gratitude
+```
 
-![image](https://github.com/jeffsikes/pandora_export/assets/6627582/d0fb64b6-f9c6-48b6-9425-a6b29d1f81ec)
+Each station you've thumbed-up songs on becomes its own heading, with your liked songs listed underneath as bullet points in "Artist - Song Title" format.
 
-## Step 3 - Open Developer Tools Console
-In Firefox, this is the wrench icon in your browser. It may not be a visible icon. If you're new to developer tools, you can [start exploring them here](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools).
+## Who this is for
 
-Once opened, you're going to want the "Console" tab.
+You don't need to know how to code to use this. You just need to be able to:
+- open a webpage
+- open your browser's built-in developer console
+- copy and paste some text into it
 
-## Step 4 - Copy and paste the script into the Console tab.
-Copy the script in full and paste it into the console tab. Then click Run.
+If you've never done that before, don't worry — it's explained step by step below.
 
-A prompt will appear, remding you to be at the top of the page before running the script.
+## How to use it
 
-A second prompt will ask you at what speed you'd like to run the script. Type the word "FAST" or "SLOW", or just leave it at "NORMAL".
+### Step 1 — Go to your Pandora Thumbs Up page
 
-* NORMAL is selected by default
-* If you have a fast connection and Pandora is playing nice, choose FAST if you're feeling lucky! 
-* If you're having difficulties with the script stopping before your full list is completed, try setting it to SLOW instead.
+While logged into Pandora on a **desktop web browser** (this doesn't work on mobile), go to:
 
-This will take awhile to run. You should see a counter in the console counting up as it adds the new records to the array.
+```
+https://www.pandora.com/profile/thumbs/{yourUsername}
+```
 
-## Step 5 - Find the downloaded file.
-You should see some text that states "JSON file has been saved to your downloads folder.".
-A new file should be found in your downlaods folder titled "liked_songs_grouped_by_station.json"
+Replace `{yourUsername}` with your actual Pandora username. You can also get here by clicking your profile icon (top right) → **My Profile** → **Thumbs Up** in the left-hand menu.
 
-You now have a file that contains the name, artist, channel and pandora links to all your thumbed up content, grouped by station. 
+Make sure the page is scrolled all the way to the top before continuing.
 
-Have fun!
+### Step 2 — Open the browser console
+
+- **Chrome/Edge:** Press `F12`, or right-click anywhere on the page and choose **Inspect**, then click the **Console** tab.
+- **Firefox:** Press `F12`, or right-click and choose **Inspect**, then click the **Console** tab.
+
+This opens a panel where you can run small bits of code on the page you're viewing. It only affects your own browser tab — it's not installing anything or changing your account.
+
+### Step 3 — Paste in the script
+
+Copy the entire contents of `pandora_like_exports.js` from this repo, click inside the Console panel, paste it in, and press **Enter**.
+
+### Step 4 — Follow the two prompts
+
+1. A popup will ask you to confirm you're at the top of the page. Click **OK**.
+2. A second popup will ask for a scroll speed: type `SLOW`, `NORMAL`, or `FAST` (or just press Enter to accept `NORMAL`).
+   - If the script seems to stop early or miss songs, try running it again with `SLOW`.
+
+### Step 5 — Let it run
+
+The console will show a running progress count as it scrolls down the page and collects your liked songs. This can take a few minutes depending on how many songs you've thumbed up and the scroll speed you picked.
+
+### Step 6 — Find your file
+
+When it finishes, the console will say the Markdown file has been saved, and a file named `pandora_thumbs_up_by_station.md` will appear in your **Downloads** folder. Move or copy that file into your Obsidian vault (or anywhere else you keep notes) whenever you're ready.
+
+## Notes
+
+- The script only reads what's already visible on the Pandora page you're logged into. It doesn't send any data anywhere else, and doesn't touch your account, password, or payment info.
+- If Pandora changes their website's layout, this script may stop working, the same as the original — that's a normal risk with any browser scraping script.
+- If you want the raw JSON version instead (with links to each track and artist page, and album art URLs), see the original repo this was forked from.
